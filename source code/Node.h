@@ -4,10 +4,12 @@
 #include <stack>
 #include <float.h>
 #include <cmath>
-
-#define eps 1e-9
-#define BSeps 1e-12
+#include <algorithm>
 using namespace std;
+
+const double eps = 1e-14;
+const double tolerance = 1e-14;
+const double BSeps = 1e-12;
 
 enum NodeType {
 	Operand,
@@ -23,11 +25,11 @@ public:
 	NodeType nodeType;
 	string *nodeValue;
 
-	Node(string *nodevalue);
+	Node(string*);
 	~Node();
 	void SetNodeType();
-	void SetRight(Node *Right);
-	void SetLeft(Node *Left);
+	void SetRight(Node*);
+	void SetLeft(Node*);
 	Node *GetRight();
 	Node *GetLeft();
 };

@@ -1,18 +1,30 @@
 #include "Equation.h"
 
-Equation::Equation() : infix(""), valid(true) { }
+Equation::Equation() { }
 
-Equation::Equation(string equation) : infix(equation), valid(true) {
+Equation::Equation(string equation) : infix(equation), foundSolution(false) {
 	ParseInfix();
 	GetPrefix();
-	SolveEquation();
+	Bisection();
 	GetFraction();
+}
+
+Equation::Equation(double co[]) : foundSolution(false) {
+	solutionSet.clear();
+	for(int i = 0; i < 7; i++) coefficients[i] = co[i];
+	if(!coefficients[0]) solutionSet.push_back(0);
+	FirstDerivative();
+	for(int i = -10000; i <= 10000; i++) NewtonMethod(i, 100);
+	//GetFraction();
+	Unique();
+	cout << "------> x = ";
+	for(int i = 0; i < solutionSet.size(); i++) cout << solutionSet[i] << ", ";
 }
 
 Equation::~Equation() { }
 
-bool Equation::Valid() {
-	return valid;
+void Equation::FirstDerivative() {
+	for(int i = 1; i < 7; i++) firstDerivativeCoefficients[i - 1] = coefficients[i] * i;
 }
 
 void Equation::PrintResult() {
@@ -31,6 +43,7 @@ void Equation::GetFraction() {
 	int n1 = 1; int n2 = 0;
 	int d1 = 0; int d2 = 1;
 	double b = result;
+
 	do {
 		double a = floor(b);
 		int temp = n1; 
@@ -41,6 +54,7 @@ void Equation::GetFraction() {
 		d2 = temp;
 		b = 1 / (b - a);
 	} while(abs(result - n1*1.0 / d1) > error);
+	
 	numerator = n1;
 	denominator = d1;
 }
@@ -138,10 +152,11 @@ void Equation::GetPrefix() {
 	}
 }
 
-void Equation::SolveEquation() {
+void Equation::Bisection() {
 	PrefixTree prefixTree;
 	prefixTree.BuildTree(&prefix);
-	double low = -1e9, high = 1e9, mid;
+	double low = -1e17, high = 1e17, mid;
+	
 	while(high > low + BSeps) {
 		mid = (high + low) / 2;
 		prefixTree.SetUnknownValue(mid);
@@ -153,7 +168,46 @@ void Equation::SolveEquation() {
 			result = mid;
 			return;
 		}
+
 		if(relationForMid == relationForHigh) high = mid;
 		else low = mid;
 	}
+}
+
+double Equation::substituteInEquation(double X) {
+	double value = 0;
+	for(int i = 0; i < 7; i++) value += coefficients[i] * pow(X, i);
+	return value;
+}
+
+double Equation::substituteInDerivative(double X) {
+	double value = 0;
+	for(int i = 0; i < 7; i++) value += firstDerivativeCoefficients[i] * pow(X, i);
+	return value;
+}
+
+void Equation::NewtonMethod(double X, int iterations) {
+	if(iterations==0) return;
+	double y = substituteInEquation(X), yDash = substituteInDerivative(X);
+	if(abs(yDash) < tolerance) return;
+	double newX = X - (y / yDash);
+	if(abs(newX - X) / abs(newX) < tolerance) {
+		solutionSet.push_back(newX);
+		return;
+	}
+	NewtonMethod(newX, iterations-1);
+}
+
+void Equation::Unique() {
+	sort(solutionSet.begin(), solutionSet.end());
+	for(int i = 0; i < solutionSet.size(); i++) {
+		for(int j = 0; j < i; j++) {
+			if(abs(solutionSet[i] - solutionSet[j]) < 1e-9) {
+				solutionSet.erase(solutionSet.begin() + i, solutionSet.begin() + i + 1);
+				i--;
+				break;
+			}
+		}
+	}
+
 }

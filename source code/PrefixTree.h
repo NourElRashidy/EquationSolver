@@ -13,8 +13,8 @@ private:
 public:
 	PrefixTree();
 	~PrefixTree();
-	void SetUnknownValue(double UnknownValue);
-	void BuildTree(vector<string> *equation);
+	void SetUnknownValue(double);
+	void BuildTree(vector<string>*);
 	Relation SolveTree();
-	double SolveBranch(Node *CurrentRoot);
+	double SolveBranch(Node*);
 };
