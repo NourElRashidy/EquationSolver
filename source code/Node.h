@@ -1,15 +1,5 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <stack>
-#include <float.h>
-#include <cmath>
-#include <algorithm>
-using namespace std;
-
-const double eps = 1e-14;
-const double tolerance = 1e-14;
-const double BSeps = 1e-12;
+#pragma once
+#include "Tools.h"
 
 enum NodeType {
 	Operand,
@@ -19,17 +9,20 @@ enum NodeType {
 
 class Node {
 private:
-	Node *left, *right;
-public:
-	Node *parent;
+	Node *left, *right, *parent;
 	NodeType nodeType;
-	string *nodeValue;
-
-	Node(string*);
+	string nodeValue;
+public:
+	Node(string);
 	~Node();
 	void SetNodeType();
-	void SetRight(Node*);
 	void SetLeft(Node*);
-	Node *GetRight();
+	void SetRight(Node*);
+	void SetParent(Node*);
+	NodeType GetNodeType();
 	Node *GetLeft();
+	Node *GetRight();
+	Node *GetParent();
+	string GetNodeValue();
 };
+

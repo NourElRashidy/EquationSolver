@@ -1,57 +1,57 @@
 #include "PrefixTree.h"
 
+
 PrefixTree::PrefixTree() : root(NULL) { }
+
 
 PrefixTree::~PrefixTree() { }
 
-void PrefixTree::SetUnknownValue(double UnknownValue) {
-	unknownValue = UnknownValue;
+
+void PrefixTree::SetValueOfX(double X) {
+	this->valueOfX = X;
 }
 
-void PrefixTree::BuildTree(vector<string> *equation) {
-	root = new Node(&((*equation)[0]));
-	Node *currentNode = root;
+Node* PrefixTree::GetRoot() {
+	return this->root;
+}
 
+
+void PrefixTree::BuildTree(vector<string> *equation) {
+	this->root = new Node((*equation)[0]);
+	Node *currentNode = root;
 	for(int i = 1; i < equation->size(); i++) {
 		bool Set = false;
 		while(!Set) {
-			if(currentNode->GetRight() == NULL && currentNode->nodeType == Operator) {
-				currentNode->SetRight(new Node(&((*equation)[i])));
+			if(currentNode->GetRight() == NULL && currentNode->GetNodeType() == Operator) {
+				currentNode->SetRight(new Node((*equation)[i]));
 				currentNode = currentNode->GetRight();
 				Set = true;
 			}
-			else if(currentNode->GetLeft() == NULL && currentNode->nodeType == Operator) {
-				currentNode->SetLeft(new Node(&((*equation)[i])));
+			else if(currentNode->GetLeft() == NULL && currentNode->GetNodeType() == Operator) {
+				currentNode->SetLeft(new Node((*equation)[i]));
 				currentNode = currentNode->GetLeft();
 				Set = true;
 			}
 			else {
-				while(currentNode->nodeType == Operand || currentNode->nodeType == UnknownOperand || (currentNode->GetLeft() != NULL && currentNode->GetRight() != NULL && currentNode->parent != NULL)) {
-					currentNode = currentNode->parent;
+				while(currentNode->GetNodeType() != Operator || (currentNode->GetLeft() != NULL && currentNode->GetRight() != NULL && currentNode->GetParent() != NULL)) {
+					currentNode = currentNode->GetParent();
 				}
 			}
 		}
 	}
 }
 
-Relation PrefixTree::SolveTree() {
-	double leftBranch = SolveBranch(root->GetLeft());
-	double rightBranch = SolveBranch(root->GetRight());
 
-	if(abs(rightBranch - leftBranch)<eps) return Equal;
-	if(leftBranch>rightBranch) return LeftGreater;
-	return LeftSmaller;
-}
+double PrefixTree::SolveTree(Node* currentNode) {
+	if(currentNode->GetNodeType() == UnknownOperand) return this->valueOfX;
+	if(currentNode->GetNodeType() == Operand) return stod(currentNode->GetNodeValue());
 
-double PrefixTree::SolveBranch(Node *CurrentRoot) {
-	if(CurrentRoot->nodeType == UnknownOperand) return unknownValue;
-	if(CurrentRoot->nodeType == Operand) return (double) stod(*(CurrentRoot->nodeValue));
+	double leftBranch = this->SolveTree(currentNode->GetLeft()),
+		   rightBranch = this->SolveTree(currentNode->GetRight());
 
-	double leftBranch = SolveBranch(CurrentRoot->GetLeft());
-	double rightBranch = SolveBranch(CurrentRoot->GetRight());
-
-	if(*(CurrentRoot->nodeValue) == "+") return leftBranch + rightBranch;
-	if(*(CurrentRoot->nodeValue) == "-") return leftBranch - rightBranch;
-	if(*(CurrentRoot->nodeValue) == "*") return leftBranch * rightBranch;
-	if(*(CurrentRoot->nodeValue) == "/") return leftBranch / rightBranch;
+	if(currentNode->GetNodeValue() == "+") return leftBranch + rightBranch;
+	else if(currentNode->GetNodeValue() == "-") return leftBranch - rightBranch;
+	else if(currentNode->GetNodeValue() == "*") return leftBranch * rightBranch;
+	else if(currentNode->GetNodeValue() == "/") return leftBranch / rightBranch;
+	else return ((abs(leftBranch - rightBranch)>eps) && (leftBranch>rightBranch)) - ((abs(leftBranch - rightBranch)>eps) && (rightBranch>leftBranch));
 }

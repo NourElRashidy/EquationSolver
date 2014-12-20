@@ -1,20 +1,17 @@
-#include "Node.h"
+#pragma once
+#include "Node.h" 
 
-enum Relation {
-	Equal,
-	LeftGreater,
-	LeftSmaller
-};
 
 class PrefixTree {
 private:
-	Node *root;
-	double unknownValue;
+	Node* root;
+	double valueOfX;
 public:
 	PrefixTree();
 	~PrefixTree();
-	void SetUnknownValue(double);
+	void SetValueOfX(double);
+	Node* GetRoot();
 	void BuildTree(vector<string>*);
-	Relation SolveTree();
-	double SolveBranch(Node*);
+	double SolveTree(Node*);
 };
+
