@@ -39,7 +39,7 @@ void Tools::Unique(vector<double> *SS) {
 	sort((*SS).begin(), (*SS).end());
 	for(int i = 0; i < (*SS).size(); i++) {
 		for(int j = 0; j < i; j++) {
-			if(abs((*SS)[i] - (*SS)[j]) < 1e-9) {
+			if(abs((*SS)[i] - (*SS)[j]) < 1e-7) {
 				(*SS).erase((*SS).begin() + i, (*SS).begin() + i + 1);
 				i--;
 				break;
