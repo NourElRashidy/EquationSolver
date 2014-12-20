@@ -10,7 +10,7 @@
 using namespace std;
 
 const double eps = 1e-14;
-const double tolerance = 1e-14;
+const double tolerance = 1e-7;
 
 
 class Tools {

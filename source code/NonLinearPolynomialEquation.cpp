@@ -38,7 +38,7 @@ double NonLinearPolynomialEquation::substituteInDerivative(double X) {
 void NonLinearPolynomialEquation::SolveByNewtonMethod(double X, int iterations) {
 	if(iterations == 0) return;
 	double y = this->substituteInFunction(X), yDash = this->substituteInDerivative(X);
-	if(abs(yDash) < tolerance) return;
+	if(abs(yDash) < eps) return;
 	double newX = X - (y / yDash);
 	if(abs(newX - X) / abs(newX) < tolerance) {
 		this->solutionSet.push_back(newX);

@@ -11,6 +11,7 @@ void PrefixTree::SetValueOfX(double X) {
 	this->valueOfX = X;
 }
 
+
 Node* PrefixTree::GetRoot() {
 	return this->root;
 }
