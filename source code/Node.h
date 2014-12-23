@@ -4,25 +4,32 @@
 enum NodeType {
 	Operand,
 	Operator,
-	UnknownOperand
 };
 
 class Node {
 private:
 	Node *left, *right, *parent;
 	NodeType nodeType;
-	string nodeValue;
+	double dblValue;
+	int powOfX;
+	char opt;
 public:
+	Node();
 	Node(string);
 	~Node();
-	void SetNodeType();
+	void SetDblValue(double);
+	void SetPowOfX(int);
+	void SetNodeValue(string);
+	void SetNodeType(NodeType);
 	void SetLeft(Node*);
 	void SetRight(Node*);
 	void SetParent(Node*);
+	double GetDblValue();
+	int GetPowOfX();
+	char GetOperator();
 	NodeType GetNodeType();
 	Node *GetLeft();
 	Node *GetRight();
 	Node *GetParent();
-	string GetNodeValue();
 };
 

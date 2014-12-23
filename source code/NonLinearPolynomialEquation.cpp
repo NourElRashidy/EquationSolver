@@ -1,36 +1,43 @@
 #include "NonLinearPolynomialEquation.h"
 
 
-NonLinearPolynomialEquation::NonLinearPolynomialEquation() { }
-
-
-NonLinearPolynomialEquation::NonLinearPolynomialEquation(double equation[5]) {
-	for(int i = 0; i < 5; i++) this->coefficients[i] = equation[i];
-	if(!this->coefficients[0]) this->solutionSet.push_back(0);
+NonLinearPolynomialEquation::NonLinearPolynomialEquation(string EQ) {
+	this->Equation::Equation(EQ);
+	this->FillCoefficients();
+	if(!this->coefficients[5]) this->solutionSet.push_back(0);
 	this->Differentiate();
 	for(int i = -10000; i <= 10000; i++) this->SolveByNewtonMethod(i, 100);
 	Tools::Unique(&(this->solutionSet));
+	this->PrintResult();
 }
 
 
 NonLinearPolynomialEquation::~NonLinearPolynomialEquation() { }
 
 
+void NonLinearPolynomialEquation::FillCoefficients() {
+	for(int i = 0; i < 11; i++) coefficients[i] = 0;
+	prefixTree.PrefixToInfix(prefixTree.GetRoot()->GetLeft(), coefficients, 1);
+	prefixTree.PrefixToInfix(prefixTree.GetRoot()->GetRight(), coefficients, -1);
+}
+
 void NonLinearPolynomialEquation::Differentiate() {
-	for(int i = 1; i < 5; i++) this->firstDerivativeCoefficients[i - 1] = this->coefficients[i] * i;
+	for(int i = 1; i < 11; i++) this->firstDerivativeCoefficients[i - 1] = this->coefficients[i] * (i-5);
 }
 
 
 double NonLinearPolynomialEquation::substituteInFunction(double X) {
 	double value = 0;
-	for(int i = 0; i < 5; i++) value += this->coefficients[i] * pow(X, i);
+	for(int i = 0; i < 5; i++) value += this->coefficients[i] / pow(X, i);
+	for(int i = 5; i < 11; i++) value += this->coefficients[i] * pow(X, i-5);
 	return value;
 }
 
 
 double NonLinearPolynomialEquation::substituteInDerivative(double X) {
 	double value = 0;
-	for(int i = 0; i < 5; i++) value += this->firstDerivativeCoefficients[i] * pow(X, i);
+	for(int i = 0; i < 5; i++) value += this->firstDerivativeCoefficients[i] / pow(X, i);
+	for(int i = 5; i < 11; i++) value += this->firstDerivativeCoefficients[i] * pow(X, i-5);
 	return value;
 }
 

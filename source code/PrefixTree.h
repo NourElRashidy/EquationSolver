@@ -10,8 +10,11 @@ public:
 	PrefixTree();
 	~PrefixTree();
 	void SetValueOfX(double);
+	void SetRoot(string);
 	Node* GetRoot();
-	void BuildTree(vector<string>*);
+	void BuildTree(Node*, vector<string>*);
+	void SimplifyTree(Node*);
+	void PrefixToInfix(Node*, double[], int);
 	double SolveTree(Node*);
 };
 

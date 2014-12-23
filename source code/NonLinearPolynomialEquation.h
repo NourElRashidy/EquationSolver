@@ -4,11 +4,11 @@
 
 class NonLinearPolynomialEquation : public Equation {
 private:
-	double coefficients[5], firstDerivativeCoefficients[5];
+	double coefficients[11], firstDerivativeCoefficients[11];
 public:
-	NonLinearPolynomialEquation();
-	NonLinearPolynomialEquation(double[]);
+	NonLinearPolynomialEquation(string);
 	~NonLinearPolynomialEquation();
+	void FillCoefficients();
 	void Differentiate();
 	double substituteInFunction(double);
 	double substituteInDerivative(double);
