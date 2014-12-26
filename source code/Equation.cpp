@@ -5,22 +5,33 @@ Equation::Equation() { }
 
 
 Equation::Equation(string EQ) {
-	this->solutionSet.clear();
-	this->Parse(EQ);
-	this->InfixToPrefix();
-	this->prefixTree.BuildTree(this->prefixTree.GetRoot(), &(this->prefix));
-	this->prefixTree.SimplifyTree(prefixTree.GetRoot());
+	this->PrepareEquation(EQ);
 }
 
 
 Equation::~Equation() { }
 
 
-bool Equation::IsLinear(string EQ) {
-	for(int i = 0; i + 2 < EQ.size(); i++) {
-		if(isalpha(EQ[i]) && EQ[i + 1] == '^' && EQ[i + 2] != '1') return false;
+void Equation::PrepareEquation(string EQ) {
+	this->Parse(EQ);
+	this->InfixToPrefix();
+	this->prefixTree.BuildTree(this->prefixTree.GetRoot(), &(this->prefix));
+	this->prefixTree.SimplifyTree(this->prefixTree.GetRoot());
+	this->FillCoefficients();
+	this->Differentiate();
+}
+
+
+bool Equation::IsLinear() {
+	for(int i = 0; i < 11; i++) {
+		if((i < 4 || i > 6) && this->coefficients[i] != 0) return false;
 	}
 	return true;
+}
+
+
+bool Equation::AbsoluteValueExists() {
+	return (this->coefficients[5] != 0);
 }
 
 
@@ -152,12 +163,35 @@ void Equation::InfixToPrefix() {
 }
 
 
-void Equation::PrintResult() {
-	for(int i = 0; i < this->solutionSet.size(); i++) {
-		pair<long long, long long> fraction = Tools::GetFraction(this->solutionSet[i]);
-		cout << "x = " << setprecision(7) << fixed << this->solutionSet[i];
-		if(fraction.second != 1) cout << " (" << fraction.first << "/" << fraction.second << ")";
-		if(i != this->solutionSet.size() - 1) cout << " or\n";
-	}
-	cout << endl << endl;
+void Equation::FillCoefficients() {
+	for(int i = 0; i < 11; i++) this->coefficients[i] = 0;
+	this->prefixTree.PrefixToInfix(this->prefixTree.GetRoot()->GetLeft(), this->coefficients, 1);
+	this->prefixTree.PrefixToInfix(this->prefixTree.GetRoot()->GetRight(), this->coefficients, -1);
+}
+
+
+void Equation::Differentiate() {
+	for(int i = 1; i < 11; i++) this->firstDerivativeCoefficients[i - 1] = this->coefficients[i] * (i - 5);
+}
+
+
+double Equation::SubstituteInTree(double X) {
+	this->prefixTree.SetValueOfX(X);
+	return this->prefixTree.SolveTree(this->prefixTree.GetRoot());
+}
+
+
+double Equation::substituteInFunction(double X) {
+	double value = 0;
+	for(int i = 0; i < 5; i++) value += this->coefficients[i] / pow(X, i);
+	for(int i = 5; i < 11; i++) value += this->coefficients[i] * pow(X, i - 5);
+	return value;
+}
+
+
+double Equation::substituteInDerivative(double X) {
+	double value = 0;
+	for(int i = 0; i < 5; i++) value += this->firstDerivativeCoefficients[i] / pow(X, i);
+	for(int i = 5; i < 11; i++) value += this->firstDerivativeCoefficients[i] * pow(X, i - 5);
+	return value;
 }

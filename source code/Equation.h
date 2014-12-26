@@ -6,13 +6,20 @@ class Equation {
 protected:
 	vector<string> infix, prefix;
 	PrefixTree prefixTree;
+	double coefficients[11], firstDerivativeCoefficients[11];
 	vector<double> solutionSet;
 public:
 	Equation();
 	Equation(string);
 	~Equation();
-	static bool IsLinear(string);
+	void PrepareEquation(string);
+	bool IsLinear();
+	bool AbsoluteValueExists();
 	void Parse(string);
 	void InfixToPrefix();
-	void PrintResult();
+	void FillCoefficients();
+	void Differentiate();
+	double SubstituteInTree(double);
+	double substituteInFunction(double);
+	double substituteInDerivative(double);
 };
