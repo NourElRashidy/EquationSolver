@@ -23,14 +23,6 @@ int Tools::GetPower(string S) {
 }
 
 
-string Tools::toString(double dbl) {
-	ostringstream os;
-	os << dbl;
-	string str = os.str();
-	return str;
-}
-
-
 int Tools::Precedence(string Operator) {
 	if(Operator == "=") return 0;
 	if(Operator == "(") return 1;
@@ -57,7 +49,7 @@ pair<long long, long long> Tools::GetFraction(double result) {
 		denominator = quotient*denominator + denRemainder;
 		denRemainder = temp;
 		ratio = 1 / (ratio - quotient);
-	} while(abs(result - numerator*1.0 / denominator) > tolerance);
+	} while(abs(result - numerator*1.0 / denominator) > FRtolerance);
 	numeratorDenominatorGCD = GCD(numerator, denominator);
 	numerator /= numeratorDenominatorGCD;
 	denominator /= numeratorDenominatorGCD;

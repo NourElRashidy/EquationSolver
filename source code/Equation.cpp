@@ -155,7 +155,7 @@ void Equation::InfixToPrefix() {
 void Equation::PrintResult() {
 	for(int i = 0; i < this->solutionSet.size(); i++) {
 		pair<long long, long long> fraction = Tools::GetFraction(this->solutionSet[i]);
-		cout << "x = " << setprecision(15) << this->solutionSet[i];
+		cout << "x = " << setprecision(7) << fixed << this->solutionSet[i];
 		if(fraction.second != 1) cout << " (" << fraction.first << "/" << fraction.second << ")";
 		if(i != this->solutionSet.size() - 1) cout << " or\n";
 	}

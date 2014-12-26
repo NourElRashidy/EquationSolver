@@ -23,6 +23,8 @@ double LinearPolynomialEquation::SolveByBisection(double high, double low, int i
 	this->prefixTree.SetValueOfX(high);
 	double relationForHigh = this->prefixTree.SolveTree(this->prefixTree.GetRoot());
 
+	if(abs(relationForMid) < tolerance) return middle;
+
 	if(relationForMid == relationForHigh) return SolveByBisection(middle, low, iterations - 1);
 	return SolveByBisection(high, middle, iterations - 1);
 }
