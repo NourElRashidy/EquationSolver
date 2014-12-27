@@ -24,9 +24,14 @@ void Equation::PrepareEquation(string EQ) {
 
 bool Equation::IsValid() {
 	for(int i = 0; i < 5; i++) {
-		if(coefficients[i] != 0) return false;
+		if(this->coefficients[i] != 0) return false;
 	}
-	return true;
+
+	for(int i = 6; i < 11; i++) {
+		if(this->coefficients[i] != 0) return true;
+	}
+
+	return false;
 }
 
 
