@@ -13,8 +13,8 @@ public:
 	Equation(string);
 	~Equation();
 	void PrepareEquation(string);
+	bool IsValid();
 	bool IsLinear();
-	bool AbsoluteValueExists();
 	void Parse(string);
 	void InfixToPrefix();
 	void FillCoefficients();

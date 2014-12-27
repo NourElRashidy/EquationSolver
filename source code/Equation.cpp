@@ -22,16 +22,19 @@ void Equation::PrepareEquation(string EQ) {
 }
 
 
-bool Equation::IsLinear() {
-	for(int i = 0; i < 11; i++) {
-		if((i < 4 || i > 6) && this->coefficients[i] != 0) return false;
+bool Equation::IsValid() {
+	for(int i = 0; i < 5; i++) {
+		if(coefficients[i] != 0) return false;
 	}
 	return true;
 }
 
 
-bool Equation::AbsoluteValueExists() {
-	return (this->coefficients[5] != 0);
+bool Equation::IsLinear() {
+	for(int i = 0; i < 11; i++) {
+		if((i < 5 || i > 6) && this->coefficients[i] != 0) return false;
+	}
+	return true;
 }
 
 

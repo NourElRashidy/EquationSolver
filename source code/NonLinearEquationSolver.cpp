@@ -11,7 +11,7 @@ NonLinearEquationSolver::~NonLinearEquationSolver() { }
 
 
 void NonLinearEquationSolver::Solve() {
-	if(!this->equation->AbsoluteValueExists()) this->solutionSet.push_back(0);
+	if(abs(this->equation->substituteInFunction(0))<tolerance) this->solutionSet.push_back(0);
 
 	for(int i = -10000; i <= 10000; i++) {
 		this->SolveByNewtonMethod(i, 100);
