@@ -3,7 +3,7 @@
 
 
 int main() {
-	
+	//test
 	string str;
 	while(getline(cin,str)) {
 		Equation *EQ = new Equation(str);
