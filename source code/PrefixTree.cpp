@@ -37,8 +37,8 @@ void PrefixTree::BuildTree(Node* currentNode, vector<string> *equation) {
 void PrefixTree::SimplifyTree(Node* currentNode) {
 	if(currentNode->GetNodeType() != Operator) return;
 
-	if(currentNode->GetRight() != NULL && currentNode->GetRight()->GetNodeType() == Operator) SimplifyTree(currentNode->GetRight());
-	if(currentNode->GetLeft() != NULL && currentNode->GetLeft()->GetNodeType() == Operator) SimplifyTree(currentNode->GetLeft());
+	if(currentNode->GetRight() != NULL) SimplifyTree(currentNode->GetRight());
+	if(currentNode->GetLeft() != NULL) SimplifyTree(currentNode->GetLeft());
 
 	// converting 9-x -> 9+(-x)
 	if(currentNode->GetNodeType() == Operator && currentNode->GetOperator() == '-') {
