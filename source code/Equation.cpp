@@ -1,10 +1,10 @@
 #include "Equation.h"
 
 
-Equation::Equation() { }
+Equation::Equation() : isValid(true) { }
 
 
-Equation::Equation(string EQ) {
+Equation::Equation(string EQ) : isValid(true) {
 	this->PrepareEquation(EQ);
 }
 
@@ -23,6 +23,8 @@ void Equation::PrepareEquation(string EQ) {
 
 
 bool Equation::IsValid() {
+	if(!this->isValid) return false;
+
 	for(int i = 0; i < 5; i++) {
 		if(this->coefficients[i] != 0) return false;
 	}
@@ -167,14 +169,32 @@ void Equation::InfixToPrefix() {
 		tokens.pop();
 	}
 
+
 	reverse(prefix.begin(), prefix.end());
+	if(prefix.back() != "=") this->isValid = false;
 }
 
 
 void Equation::FillCoefficients() {
 	for(int i = 0; i < 11; i++) this->coefficients[i] = 0;
-	this->prefixTree.PrefixToInfix(this->prefixTree.GetRoot()->GetLeft(), this->coefficients, 1);
-	this->prefixTree.PrefixToInfix(this->prefixTree.GetRoot()->GetRight(), this->coefficients, -1);
+	
+	try {
+		this->prefixTree.PrefixToInfix(this->prefixTree.GetRoot()->GetLeft(), this->coefficients, 1);
+	}
+	catch(const char* msg) {
+		//cerr << msg << endl;
+		this->isValid = false;
+		return;
+	}
+
+	try {
+		this->prefixTree.PrefixToInfix(this->prefixTree.GetRoot()->GetRight(), this->coefficients, -1);
+	}
+	catch(const char* msg) {
+		//cerr << msg << endl;
+		this->isValid = false;
+		return;
+	}
 }
 
 

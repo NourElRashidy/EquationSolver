@@ -27,7 +27,7 @@ void NonLinearEquationSolver::SolveByNewtonMethod(double X, int iterations) {
 	double y = this->equation->substituteInFunction(X), yDash = this->equation->substituteInDerivative(X);
 	if(abs(yDash) < eps) return;
 	double newX = X - (y / yDash);
-	if(abs(newX - X) / abs(newX) < tolerance) {
+	if(abs(this->equation->substituteInFunction(newX)) < tolerance) {
 		this->solutionSet.push_back(newX);
 		return;
 	}

@@ -8,6 +8,7 @@ protected:
 	PrefixTree prefixTree;
 	double coefficients[11], firstDerivativeCoefficients[11];
 	vector<double> solutionSet;
+	bool isValid;
 public:
 	Equation();
 	Equation(string);

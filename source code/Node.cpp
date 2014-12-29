@@ -42,7 +42,7 @@ void Node::SetNodeType(NodeType NT) {
 
 void Node::SetLeft(Node *Left) {
 	this->left = Left;
-	if(Left != NULL) Left->parent = this;
+	if(Left != NULL) Left->SetParent(this);
 }
 
 
@@ -78,15 +78,24 @@ NodeType Node::GetNodeType() {
 
 
 Node* Node::GetLeft() {
+	if(this == NULL) {
+		throw "Invalid Equation!";
+	}
 	return this->left;
 }
 
 
 Node* Node::GetRight() {
+	if(this == NULL) {
+		throw "Invalid Equation!";
+	}
 	return this->right;
 }
 
 
 Node* Node::GetParent() {
+	if(this == NULL) {
+		throw "Invalid Equation!";
+	}
 	return this->parent;
 }
