@@ -15,6 +15,7 @@ Equation::~Equation() { }
 void Equation::PrepareEquation(string EQ) {
 	this->Parse(EQ);
 	this->InfixToPrefix();
+	if(!this->isValid) return;
 	this->prefixTree.BuildTree(this->prefixTree.GetRoot(), &(this->prefix));
 	this->prefixTree.SimplifyTree(this->prefixTree.GetRoot());
 	this->FillCoefficients();
@@ -148,10 +149,19 @@ void Equation::InfixToPrefix() {
 				tokens.push(operators.top());
 				operators.pop();
 			}
+			if(operators.empty()) {
+				this->isValid = false;
+				return;
+			}
 			operators.pop();
 		}
 		else {
 			while(!operators.empty() && Tools::Precedence(operators.top()) >= Tools::Precedence(this->infix[i])) {
+				if(operators.top() == "(") {
+					this->isValid = false;
+					return;
+				}
+
 				tokens.push(operators.top());
 				operators.pop();
 			}
@@ -160,6 +170,11 @@ void Equation::InfixToPrefix() {
 	}
 
 	while(!operators.empty()) {
+		if(operators.top() == "(") {
+			this->isValid = false;
+			return;
+		}
+
 		tokens.push(operators.top());
 		operators.pop();
 	}
